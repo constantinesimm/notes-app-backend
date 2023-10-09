@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  Index,
   Entity,
   PrimaryGeneratedColumn,
   Column,
@@ -15,7 +16,7 @@ enum NoteAccessType {
 }
 @Entity({ name: 'Notes' })
 export class NoteEntity {
-  @PrimaryGeneratedColumn({ type: 'number' })
+  @PrimaryGeneratedColumn()
   @ApiProperty({
     type: 'number',
     description: 'Notes table ID',
@@ -24,7 +25,8 @@ export class NoteEntity {
   })
   id: number;
 
-  @Column({ type: 'string' })
+  @Index()
+  @Column()
   @ApiProperty({
     type: 'string',
     description: 'Notes title',
@@ -33,7 +35,7 @@ export class NoteEntity {
   })
   title: string;
 
-  @Column({ type: 'string' })
+  @Column()
   @ApiProperty({
     type: 'string',
     description: 'Notes body text or text array',
@@ -42,7 +44,7 @@ export class NoteEntity {
   })
   body: string;
 
-  @Column({ type: 'string', nullable: true })
+  @Column({ nullable: true })
   @ApiProperty({
     type: 'string',
     description: 'Notes link for share',
@@ -78,7 +80,6 @@ export class NoteEntity {
   tags: NoteTagEntity[];
 
   @Column({
-    type: 'datetime',
     name: 'created_at',
     default: new Date(),
   })
@@ -92,7 +93,6 @@ export class NoteEntity {
   createdAt: Date;
 
   @Column({
-    type: 'datetime',
     name: 'updated_at',
     default: new Date(),
   })

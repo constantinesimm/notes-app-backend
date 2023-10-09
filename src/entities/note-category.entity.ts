@@ -1,11 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  Index,
+} from 'typeorm';
 
 import { UserEntity } from './user.entity';
 
 @Entity({ name: 'NoteCategory' })
 export class NoteCategoryEntity {
-  @PrimaryGeneratedColumn({ type: 'number' })
+  @PrimaryGeneratedColumn()
   @ApiProperty({
     type: 'number',
     description: 'Notes table ID',
@@ -14,7 +20,8 @@ export class NoteCategoryEntity {
   })
   id: number;
 
-  @Column({ type: 'string', nullable: false })
+  @Index()
+  @Column()
   @ApiProperty({
     type: 'string',
     description: 'Notes category name',

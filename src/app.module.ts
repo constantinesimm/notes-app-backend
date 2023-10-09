@@ -6,6 +6,9 @@ import { AppService } from './app.service';
 import { AppController } from './app.controller';
 
 import { TypeormService } from './core/services';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { NotesModule } from './modules/notes/notes.module';
 
 @Module({
   imports: [
@@ -16,6 +19,9 @@ import { TypeormService } from './core/services';
     TypeOrmModule.forRootAsync({
       useClass: TypeormService,
     }),
+    AuthModule,
+    UsersModule,
+    NotesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

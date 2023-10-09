@@ -7,7 +7,7 @@ export class TypeormService implements TypeOrmOptionsFactory {
 
   public createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
-      type: this.cfg.get<string>('DB_TYPE') as any,
+      type: 'postgres',
       url: this.cfg.get<string>('DB_URL'),
       logging: this.cfg.get('NODE_ENV') !== 'production',
       synchronize: false,

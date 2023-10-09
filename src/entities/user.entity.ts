@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
 
 enum UserRoles {
   Admin = 'admin',
@@ -7,7 +7,7 @@ enum UserRoles {
 }
 @Entity({ name: 'Users' })
 export class UserEntity {
-  @PrimaryGeneratedColumn({ type: 'number' })
+  @PrimaryGeneratedColumn()
   @ApiProperty({
     type: 'number',
     description: 'Users table ID',
@@ -16,7 +16,8 @@ export class UserEntity {
   })
   id: number;
 
-  @Column({ unique: true, type: 'string' })
+  @Index({ unique: true })
+  @Column({ unique: true })
   @ApiProperty({
     type: 'string',
     description: 'Users email for login and send notifications',
@@ -25,7 +26,7 @@ export class UserEntity {
   })
   email: string;
 
-  @Column({ type: 'string' })
+  @Column()
   @ApiProperty({
     type: 'string',
     description: 'Users password hash',
@@ -34,16 +35,27 @@ export class UserEntity {
   })
   password: string;
 
-  @Column({ type: 'string' })
+  @Index('name1-idx')
+  @Column({ name: 'first_name' })
   @ApiProperty({
     type: 'string',
-    description: 'Users name',
+    description: 'Users first name',
     required: true,
-    example: 'John Doe',
+    example: 'John',
   })
-  name: string;
+  firstName: string;
 
-  @Column({ type: 'boolean', name: 'is_verified', default: false })
+  @Index('name2-idx')
+  @Column({ name: 'last_name' })
+  @ApiProperty({
+    type: 'string',
+    description: 'Users last name',
+    required: true,
+    example: 'Doe',
+  })
+  lastName: string;
+
+  @Column({ name: 'is_verified', default: false })
   @ApiProperty({
     type: 'boolean',
     description: 'Indicates whether the user has confirmed their email address',
@@ -63,8 +75,17 @@ export class UserEntity {
   })
   role: UserRoles;
 
+  @Column({ default: 'avatar.jpg' })
+  @ApiProperty({
+    type: 'string',
+    description: 'Users account avatar',
+    required: false,
+    default: new Date(),
+    example: `${new Date()}`,
+  })
+  avatar?: string;
+
   @Column({
-    type: 'datetime',
     name: 'created_at',
     default: new Date(),
   })
@@ -78,7 +99,6 @@ export class UserEntity {
   createdAt: Date;
 
   @Column({
-    type: 'datetime',
     name: 'updated_at',
     default: new Date(),
   })
