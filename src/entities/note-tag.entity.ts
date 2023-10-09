@@ -9,7 +9,7 @@ import {
 
 import { UserEntity } from './user.entity';
 
-@Entity({ name: 'NoteTag' })
+@Entity({ name: 'tags' })
 export class NoteTagEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({

@@ -6,7 +6,7 @@ dotenv.config();
 const datasource: DataSource = new DataSource({
   type: 'postgres',
   url: process.env.DB_URL,
-  migrationsTableName: 'Migrations',
+  migrationsTableName: 'migrations',
   migrations: [`*/migrations/*{.ts,.js}`],
   entities: ['*/**/*.entity{.ts,.js}'],
 });

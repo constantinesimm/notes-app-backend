@@ -17,6 +17,12 @@ npm: 9.8.0
 $ npm install
 ```
 
+## Migrations
+All migrations is already added to project
+```bash
+$ npm run migrate
+```
+
 ## Running the app
 ```bash
 $ npm run build

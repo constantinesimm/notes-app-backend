@@ -9,7 +9,7 @@ import {
 
 import { UserEntity } from './user.entity';
 
-@Entity({ name: 'NoteCategory' })
+@Entity({ name: 'categories' })
 export class NoteCategoryEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({

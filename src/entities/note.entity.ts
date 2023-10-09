@@ -14,7 +14,7 @@ enum NoteAccessType {
   Public = 'public',
   Private = 'private',
 }
-@Entity({ name: 'Notes' })
+@Entity({ name: 'notes' })
 export class NoteEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({

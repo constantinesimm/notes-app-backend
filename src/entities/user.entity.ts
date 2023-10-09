@@ -5,7 +5,7 @@ enum UserRoles {
   Admin = 'admin',
   Customer = 'customer',
 }
-@Entity({ name: 'Users' })
+@Entity({ name: 'users' })
 export class UserEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({
