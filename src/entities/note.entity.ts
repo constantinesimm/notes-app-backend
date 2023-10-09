@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  ManyToMany,
+} from 'typeorm';
 import { UserEntity } from './user.entity';
-
-enum NoteType {
-  List = 'list',
-  Text = 'text',
-}
+import { NoteTagEntity } from './note-tag.entity';
 
 enum NoteAccessType {
   Public = 'public',
@@ -36,9 +38,9 @@ export class NoteEntity {
     type: 'string',
     description: 'Notes body text or text array',
     required: true,
-    example: '"some note text" or ["some text1", "some text2"]',
+    example: 'some note text',
   })
-  body: string | string[];
+  body: string;
 
   @Column({ type: 'string', nullable: true })
   @ApiProperty({
@@ -48,15 +50,6 @@ export class NoteEntity {
     example: 'https://example.com/link',
   })
   link: string;
-
-  @Column({ type: 'enum', enum: NoteType })
-  @ApiProperty({
-    type: 'enum',
-    description: 'Notes type',
-    required: true,
-    example: `${NoteType.List} or ${NoteType.Text}`,
-  })
-  type: NoteType;
 
   @Column({
     type: 'enum',
@@ -80,6 +73,9 @@ export class NoteEntity {
     required: false,
   })
   accessUsers: number;
+
+  @ManyToMany(() => NoteTagEntity, (tag) => tag.id, { nullable: true })
+  tags: NoteTagEntity[];
 
   @Column({
     type: 'datetime',
