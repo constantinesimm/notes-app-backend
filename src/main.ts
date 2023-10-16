@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 
 dotenv.config();
 
-const APP_PORT: number = parseInt(process.env.PORT) || 3000;
+const APP_PORT: number = parseInt(process.env.NODE_PORT) || 3000;
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
