@@ -22,7 +22,7 @@ dotenv.config();
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_TOKEN_SECRET,
-      signOptions: { expiresIn: '60m' },
+      signOptions: { expiresIn: '24h' },
     }),
   ],
   providers: [AuthService, BcryptService, JwtStrategy],

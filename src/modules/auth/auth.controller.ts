@@ -2,7 +2,7 @@ import { ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
-import { UserLoginDto } from './dto/user-login.dto';
+import { UserLoginDto, UserRegisterDto, PasswordRecoveryDto } from './dto';
 
 import { UserEntity } from '../../entities';
 
@@ -21,5 +21,7 @@ export class AuthController {
   }
 
   @Post('sign-up')
-  async localRegister(@Body() signUpDto) {}
+  async localRegister(@Body() signUpDto: UserRegisterDto) {
+    return await this.authService.registerUser(signUpDto);
+  }
 }

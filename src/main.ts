@@ -4,12 +4,16 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 
 import { AppModule } from './app.module';
-import { setupSwaggerDocumentModule } from './core/utils';
+import {
+  setupSwaggerDocumentModule,
+  checkOrCreateUploadsDir,
+} from './core/utils';
 
 dotenv.config();
 
 const APP_PORT: number = parseInt(process.env.NODE_PORT) || 3000;
 async function bootstrap(): Promise<void> {
+  await checkOrCreateUploadsDir();
   const app = await NestFactory.create(AppModule);
 
   app.use(helmet());

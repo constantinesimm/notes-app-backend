@@ -6,6 +6,8 @@ import {
   Column,
   ManyToOne,
   ManyToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { NoteTagEntity } from './note-tag.entity';
@@ -79,9 +81,8 @@ export class NoteEntity {
   @ManyToMany(() => NoteTagEntity, (tag) => tag.id, { nullable: true })
   tags: NoteTagEntity[];
 
-  @Column({
+  @CreateDateColumn({
     name: 'created_at',
-    default: new Date(),
   })
   @ApiProperty({
     type: 'datetime',
@@ -92,9 +93,8 @@ export class NoteEntity {
   })
   createdAt: Date;
 
-  @Column({
+  @UpdateDateColumn({
     name: 'updated_at',
-    default: new Date(),
   })
   @ApiProperty({
     type: 'datetime',

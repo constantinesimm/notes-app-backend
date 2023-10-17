@@ -30,16 +30,20 @@ export class AuthService {
       if (!user)
         throw new UnauthorizedException('User not found or not exists');
 
-      const matchPass: Promise<boolean> = this.bcryptService.comparePasswords(
+      const matchPass: boolean = await this.bcryptService.comparePasswords(
         loginData.password,
         user.password,
       );
 
-      if (matchPass) {
-        delete user.password;
+      if (!matchPass)
+        throw new UnauthorizedException('Invalid email or password');
 
-        return user;
-      } else throw new UnauthorizedException('Invalid email or password');
+      if (!user.isVerified)
+        throw new BadRequestException('Please, confirm email address');
+
+      delete user.password;
+
+      return user;
     } catch (e) {
       throw new InternalServerErrorException(e);
     }
@@ -53,6 +57,17 @@ export class AuthService {
 
       if (user)
         throw new BadRequestException('User with such email is already exists');
+
+      const serviceToken: string = await this.jwtService.signAsync(
+        { sub: registerData.email },
+        {
+          secret: this.cfgService.get<string>('JWT_TOKEN_SECRET'),
+          expiresIn: '24h',
+        },
+      );
+
+      console.log(registerData, serviceToken);
+      return await this.usersService.createOne(registerData, serviceToken);
     } catch (e) {
       throw new InternalServerErrorException(e);
     }

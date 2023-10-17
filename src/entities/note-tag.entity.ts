@@ -5,6 +5,8 @@ import {
   Column,
   ManyToOne,
   Index,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import { UserEntity } from './user.entity';
@@ -32,4 +34,28 @@ export class NoteTagEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.id, { nullable: true })
   owner: number;
+
+  @CreateDateColumn({
+    name: 'created_at',
+  })
+  @ApiProperty({
+    type: 'datetime',
+    description: 'Notes category created at field',
+    required: true,
+    default: new Date(),
+    example: `${new Date()}`,
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    name: 'updated_at',
+  })
+  @ApiProperty({
+    type: 'datetime',
+    description: 'Notes category updated at field',
+    required: true,
+    default: new Date(),
+    example: `${new Date()}`,
+  })
+  updatedAt: Date;
 }

@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Index,
+  UpdateDateColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 enum UserRoles {
   Admin = 'admin',
@@ -105,9 +112,8 @@ export class UserEntity {
   })
   avatar?: string;
 
-  @Column({
+  @CreateDateColumn({
     name: 'created_at',
-    default: new Date(),
   })
   @ApiProperty({
     type: 'datetime',
@@ -118,9 +124,8 @@ export class UserEntity {
   })
   createdAt: Date;
 
-  @Column({
+  @UpdateDateColumn({
     name: 'updated_at',
-    default: new Date(),
   })
   @ApiProperty({
     type: 'datetime',
