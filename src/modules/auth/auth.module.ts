@@ -1,9 +1,8 @@
 import * as dotenv from 'dotenv';
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
-import { JwtStrategy } from '../../core/strategies';
+import { JwtStrategy, LocalStrategy } from '../../core/strategies';
 
 import { AuthService } from './auth.service';
 import { BcryptService } from '../../core/services';
@@ -16,16 +15,8 @@ import { AuthController } from './auth.controller';
 dotenv.config();
 
 @Module({
-  imports: [
-    UsersModule,
-    SharedModule,
-    PassportModule,
-    JwtModule.register({
-      secret: process.env.JWT_TOKEN_SECRET,
-      signOptions: { expiresIn: '24h' },
-    }),
-  ],
-  providers: [AuthService, BcryptService, JwtStrategy],
+  imports: [UsersModule, SharedModule, PassportModule],
+  providers: [AuthService, BcryptService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })

@@ -12,7 +12,7 @@ export class TypeormService implements TypeOrmOptionsFactory {
       logging: this.cfg.get('NODE_ENV') !== 'production',
       synchronize: false,
       migrationsRun: false,
-      migrationsTableName: 'Migrations',
+      migrationsTableName: 'migrations',
       autoLoadEntities: true,
     };
   }

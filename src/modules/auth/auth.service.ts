@@ -11,24 +11,37 @@ import { UserLoginDto, UserRegisterDto, PasswordRecoveryDto } from './dto';
 import { UsersService } from '../users/users.service';
 
 import { BcryptService } from '../../core/services';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class AuthService {
+  private translate(key: string, args?: any): string {
+    const options = {
+      lang: I18nContext.current().lang,
+    };
+    if (args) Object.assign(options, { ...args });
+
+    return this.i18n.t(key, options);
+  }
+
   constructor(
     private cfgService: ConfigService,
     private jwtService: JwtService,
     private usersService: UsersService,
     private bcryptService: BcryptService,
+    readonly i18n: I18nService,
   ) {}
 
   async validateUser(loginData: UserLoginDto): Promise<UserEntity> {
     try {
       const user: UserEntity = await this.usersService.findByEmail(
-        loginData.email,
+        loginData.email.toLowerCase().trim(),
       );
 
       if (!user)
-        throw new UnauthorizedException('User not found or not exists');
+        throw new UnauthorizedException(
+          this.translate('auth.errors.userNotFound'),
+        );
 
       const matchPass: boolean = await this.bcryptService.comparePasswords(
         loginData.password,
@@ -36,14 +49,33 @@ export class AuthService {
       );
 
       if (!matchPass)
-        throw new UnauthorizedException('Invalid email or password');
+        throw new UnauthorizedException(
+          this.translate('auth.errors.passwordNotMatched'),
+        );
 
       if (!user.isVerified)
-        throw new BadRequestException('Please, confirm email address');
+        throw new BadRequestException(
+          this.translate('auth.errors.emailConfirm'),
+        );
 
       delete user.password;
 
-      return user;
+      const accessToken: string = await this.jwtService.signAsync(
+        {
+          id: user.id,
+          email: user.email,
+        },
+        {
+          secret: this.cfgService.get<string>('JWT_TOKEN_SECRET'),
+          expiresIn: '24h',
+        },
+      );
+      await this.usersService.updateOne({ id: user.id, accessToken });
+
+      return {
+        ...user,
+        accessToken,
+      };
     } catch (e) {
       throw new InternalServerErrorException(e);
     }
@@ -52,11 +84,11 @@ export class AuthService {
   async registerUser(registerData: UserRegisterDto) {
     try {
       const user: UserEntity = await this.usersService.findByEmail(
-        registerData.email,
+        registerData.email.toLowerCase().trim(),
       );
 
       if (user)
-        throw new BadRequestException('User with such email is already exists');
+        throw new BadRequestException(this.translate('auth.errors.userExists'));
 
       const serviceToken: string = await this.jwtService.signAsync(
         { sub: registerData.email },
@@ -66,7 +98,7 @@ export class AuthService {
         },
       );
 
-      console.log(registerData, serviceToken);
+      registerData.email = registerData.email.toLowerCase().trim();
       return await this.usersService.createOne(registerData, serviceToken);
     } catch (e) {
       throw new InternalServerErrorException(e);

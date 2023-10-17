@@ -31,4 +31,8 @@ export class UsersService {
 
     return user;
   }
+
+  public async updateOne(userDto: Partial<UserEntity>) {
+    return await this.userRepository.update(userDto.id, { ...userDto });
+  }
 }

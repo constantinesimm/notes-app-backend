@@ -1,10 +1,19 @@
 import { ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Header,
+  HttpCode,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 import { UserLoginDto, UserRegisterDto, PasswordRecoveryDto } from './dto';
 
-import { UserEntity } from '../../entities';
+import { LocalAuthenticationGuard } from '../../core/guards';
+import { Response } from 'express';
 
 @ApiTags('Auth Controller')
 @ApiUnauthorizedResponse({
@@ -15,9 +24,19 @@ import { UserEntity } from '../../entities';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @HttpCode(200)
+  @UseGuards(LocalAuthenticationGuard)
   @Post('sign-in')
-  async localLogin(@Body() signInDto: UserLoginDto): Promise<UserEntity> {
-    return await this.authService.validateUser(signInDto);
+  async localLogin(
+    @Body() signInDto: UserLoginDto,
+    @Res() res: Response,
+  ): Promise<Response> {
+    const user = await this.authService.validateUser(signInDto);
+
+    res.header('Authorization', `Bearer ${user.accessToken}`);
+    delete user.accessToken;
+
+    return res.json({ user });
   }
 
   @Post('sign-up')
