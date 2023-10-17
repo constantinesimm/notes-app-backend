@@ -20,7 +20,7 @@ export class NoteCategoryEntity {
   })
   id: number;
 
-  @Index()
+  @Index('category_title-idx')
   @Column()
   @ApiProperty({
     type: 'string',

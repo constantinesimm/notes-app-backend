@@ -1,8 +1,10 @@
 import helmet from 'helmet';
 import * as dotenv from 'dotenv';
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 
 import { AppModule } from './app.module';
+import { setupSwaggerDocumentModule } from './core/utils';
 
 dotenv.config();
 
@@ -17,6 +19,10 @@ async function bootstrap(): Promise<void> {
     methods: ['GET', 'PUT', 'POST', 'DELETE'],
     preflightContinue: true,
   });
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+  );
+  setupSwaggerDocumentModule(app);
 
   await app.listen(APP_PORT);
 }

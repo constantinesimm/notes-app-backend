@@ -20,7 +20,7 @@ export class NoteTagEntity {
   })
   id: number;
 
-  @Index()
+  @Index('tag_title-idx')
   @Column()
   @ApiProperty({
     type: 'string',

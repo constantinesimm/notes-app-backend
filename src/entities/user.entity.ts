@@ -16,7 +16,7 @@ export class UserEntity {
   })
   id: number;
 
-  @Index({ unique: true })
+  @Index('email-idx', { unique: true })
   @Column({ unique: true })
   @ApiProperty({
     type: 'string',
@@ -35,7 +35,6 @@ export class UserEntity {
   })
   password: string;
 
-  @Index('name1-idx')
   @Column({ name: 'first_name' })
   @ApiProperty({
     type: 'string',
@@ -45,7 +44,6 @@ export class UserEntity {
   })
   firstName: string;
 
-  @Index('name2-idx')
   @Column({ name: 'last_name' })
   @ApiProperty({
     type: 'string',
@@ -74,6 +72,28 @@ export class UserEntity {
     example: `${UserRoles.Admin} or ${UserRoles.Customer}`,
   })
   role: UserRoles;
+
+  @Index('access_token-idx')
+  @Column({ name: 'access_token', default: null, nullable: true })
+  @ApiProperty({
+    type: ['string', 'null'],
+    description: 'Users access token',
+    required: false,
+    default: null,
+    example: `dsavsdvsdonvsdvdsvosdv or null`,
+  })
+  accessToken: string | null;
+
+  @Index('service_token-idx')
+  @Column({ name: 'service_token', default: null, nullable: true })
+  @ApiProperty({
+    type: ['string', 'null'],
+    description: 'Users service token',
+    required: false,
+    default: null,
+    example: `dsavsdvsdonvsdvdsvosdv or null`,
+  })
+  serviceToken: string | null;
 
   @Column({ default: 'avatar.jpg' })
   @ApiProperty({

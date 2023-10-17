@@ -25,7 +25,7 @@ export class NoteEntity {
   })
   id: number;
 
-  @Index()
+  @Index('note_title-idx')
   @Column()
   @ApiProperty({
     type: 'string',
